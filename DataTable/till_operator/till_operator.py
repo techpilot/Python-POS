@@ -3,12 +3,11 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.lang import Builder
 
-
 import unittest
+import math
 import re
 from pymongo import MongoClient
 
-# Builder
 Builder.load_file('till_operator/operator.kv')
 
 
@@ -21,7 +20,7 @@ class OperatorWindow(BoxLayout):
 
         self.cart = []
         self.qty = []
-        self.total = 0.00
+        self.total = 0.00  # self.ids.qty_inp.text
 
     def logout(self):
         self.parent.parent.current = 'scrn_si'
@@ -41,7 +40,8 @@ class OperatorWindow(BoxLayout):
             code = Label(text=pcode, size_hint_x=.3, color=(.06, .45, .45, 1))
             name = Label(text=target_code['product_name'],
                          size_hint_x=.3, color=(.06, .45, .45, 1))
-            qty = Label(text='', size_hint_x=.1, color=(.06, .45, .45, 1))
+            qty = Label(text=str(self.ids.qty_inp.text),
+                        size_hint_x=.1, color=(.06, .45, .45, 1))
             disc = Label(text='0.00', size_hint_x=.1, color=(.06, .45, .45, 1))
             price = Label(
                 text=str(target_code['product_price']), size_hint_x=.1, color=(.06, .45, .45, 1))
@@ -56,11 +56,11 @@ class OperatorWindow(BoxLayout):
 
             # Update Preview
             pname = name.text
-            pprice = float(price.text)
+            pprice = float(price.text) * int(self.ids.qty_inp.text)
             pqty = str(self.ids.qty_inp.text)  # 1
             self.total += pprice
 
-            purchase_total = '`\n\nTotal\t\t\t\t\t\t\t\t\t\t\t\t\t\t' + \
+            purchase_total = '`\n\nTotal\t\t\t\t\t\t\t\t\t\t\t' + \
                 str(self.total)
             self.ids.cur_product.text = pname
             self.ids.cur_price.text = str(pprice)
@@ -86,13 +86,13 @@ class OperatorWindow(BoxLayout):
                 self.cart.append(pcode)
                 self.qty.append(self.ids.qty_inp.text)  # 1
                 nu_preview = '\n'.join(
-                    [prev_text, pname+'\tx'+pqty+'\t'+str(pprice), purchase_total])
+                    [prev_text, pname+'\tx'+pqty+'\t'+str(price.text), purchase_total])
                 preview.text = nu_preview
 
             self.ids.disc_inp.text = '0.00'
             self.ids.disc_perc_inp.text = '0'
             self.ids.qty_inp.text = str(pqty)
-            self.ids.price_inp.text = str(pprice)
+            self.ids.price_inp.text = str(price.text)
             self.ids.vat_inp.text = '15%'
             self.ids.total_inp.text = str(pprice)
 
