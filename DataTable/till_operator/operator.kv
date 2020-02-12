@@ -6,11 +6,10 @@
     orientation: 'vertical'
     canvas.before:
         Color:
-            rgba: (1, 1, 1, 1)  # 1, .05, .06, .05
+            rgba: (1, .05, .06, .05)  # 1, .05, .06, .05
         Rectangle:
             size: self.size
             pos: self.pos
-
 
     BoxLayout:
         id: header
@@ -122,9 +121,9 @@
                 TextInput:
                     id: qty_inp
                     size_hint_x: .1
-                    input_filter: 'int'
+                    input_filter: 'float'
                     multiline: False
-                    on_text_validate: code_inp.focus = True
+                    on_text_validate: disc_inp.focus = True
                 TextInput:
                     id: code_inp
                     size_hint_x: .3
@@ -132,6 +131,9 @@
                     on_text_validate: root.update_purchases()
                 TextInput:
                     id: disc_inp
+                    multiline: False
+                    input_filter: 'float'
+                    on_text_validate: code_inp.focus = True
                     size_hint_x: .1
                 TextInput:
                     id: disc_perc_inp
